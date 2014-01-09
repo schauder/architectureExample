@@ -9,9 +9,9 @@ public class ConsoleStuff {
     public static void main(String[] args) {
 
         System.out.println("Spiel gestartet!");
-        System.out.print("Runde 1 Eingabe:");
-        makeInput();
-        System.out.println("      XXX Punkte! Gesamt: XXX");
+        System.out.print("Runde 1 Eingabe: ");
+        String input = makeInput();
+        System.out.println(input + " bringt XXX Punkte! Gesamt: XXX");
     }
 
     private static String makeInput() {
