@@ -11,7 +11,13 @@ public class ConsoleStuff {
         System.out.println("Spiel gestartet!");
         System.out.print("Runde 1 Eingabe: ");
         String input = makeInput();
-        System.out.println(input + " bringt XXX Punkte! Gesamt: XXX");
+        System.out.println(input + " bringt " + machMalPunkte(input)
+                + " Punkte! Gesamt: XXX");
+    }
+
+    private static int machMalPunkte(String input) {
+        return 42;
+
     }
 
     private static String makeInput() {
