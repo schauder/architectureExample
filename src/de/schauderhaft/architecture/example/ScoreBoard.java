@@ -1,14 +1,20 @@
 package de.schauderhaft.architecture.example;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import org.junit.Test;
 
 public class ScoreBoard {
 
 	JPanel container = new JPanel();
+	JLabel text = new JLabel("Points:");
+	JLabel points = new JLabel("0");
 
-	@Test
+	public ScoreBoard() {
+		container.add(text);
+		container.add(points);
+
+	}
+
 	public JPanel getScorePanel() {
 		return container;
 	}
