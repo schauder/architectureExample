@@ -1,12 +1,11 @@
 package de.schauderhaft.architecture.example;
 
+import static org.junit.Assert.assertTrue;
+
 import java.awt.Component;
-import java.awt.Container;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
-
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -35,7 +34,7 @@ public class InputViewTest {
 		boolean fieldExists = false;
 
 		for (Component c : components) {
-			if (clazz.isInstance(c)){
+			if (clazz.isInstance(c)) {
 				fieldExists = true;
 			}
 		}
