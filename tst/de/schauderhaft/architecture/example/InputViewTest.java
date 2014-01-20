@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.awt.Component;
 
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.junit.Test;
@@ -29,6 +30,15 @@ public class InputViewTest {
 
 	}
 
+	@Test
+	public void inputViewShouldHavePanelForScore() {
+		InputView view = new InputView();
+		Component[] components = view.getInputView().getContentPane()
+				.getComponents();
+		componentsAssertTrue(components, JPanel.class);
+
+	}
+
 	private <T extends Component> void componentsAssertTrue(
 			Component[] components, Class<T> clazz) {
 		boolean fieldExists = false;
@@ -40,4 +50,5 @@ public class InputViewTest {
 		}
 		assertTrue(fieldExists);
 	}
+
 }
