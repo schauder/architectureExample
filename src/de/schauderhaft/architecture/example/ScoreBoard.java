@@ -19,4 +19,13 @@ public class ScoreBoard {
 		return container;
 	}
 
+	/**
+	 * Add new value to label.
+	 * 
+	 * @param newScore
+	 */
+	public void newScore(int newScore) {
+		points.setText(Integer.valueOf(newScore).toString());
+	}
+
 }
