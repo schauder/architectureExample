@@ -1,30 +1,27 @@
 package de.schauderhaft.architecture.example;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JFrame;
 
-public class CrosswordController {
+public class CrossWordController {
 
-	InputView view;
-	CrosswordGame game;
+	private InputView view;
+	private CrosswordGame crosswordGame;
 
-	public CrosswordController(InputView view, CrosswordGame game) {
+	public CrossWordController(InputView view, CrosswordGame crosswordGame) {
 		super();
 		this.view = view;
-		this.game = game;
+		this.crosswordGame = crosswordGame;
 	}
 
-	public void combineView2game() {
+	public void start() {
 
-		view.addActionForSubmit(new ActionListener() {
+		WordInputComponent inputWordComponent = new WordInputComponent(view,
+				crosswordGame);
+		inputWordComponent.combineView2game();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String word = view.getInput().trim();
-				int points = game.submit(word);
-				view.newScore(points);
-			}
-		});
+		view.getInputView().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		view.getInputView().setVisible(true);
+
 	}
 
 }

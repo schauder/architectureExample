@@ -3,8 +3,6 @@ package de.schauderhaft.architecture.example;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import javax.swing.JFrame;
-
 public class GuiStarter {
 
 	public static void main(String[] args) {
@@ -14,11 +12,9 @@ public class GuiStarter {
 		CrosswordGame crosswordGame = new CrosswordGame(new HashSet<String>(
 				Arrays.asList("Haus", "Maus", "Auto")));
 
-		CrosswordController controller = new CrosswordController(view,
+		CrossWordController controller = new CrossWordController(view,
 				crosswordGame);
-		controller.combineView2game();
+		controller.start();
 
-		view.getInputView().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		view.getInputView().setVisible(true);
 	}
 }
