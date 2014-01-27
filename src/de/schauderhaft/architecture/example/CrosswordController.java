@@ -15,9 +15,7 @@ public class CrossWordController {
 
 	public void start() {
 
-		WordInputComponent inputWordComponent = new WordInputComponent(view,
-				crosswordGame);
-		inputWordComponent.combineView2game();
+		view.addActionForSubmit(new WordInputActionListener(view, crosswordGame));
 
 		view.getInputView().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		view.getInputView().setVisible(true);
