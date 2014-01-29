@@ -22,12 +22,16 @@ public class ConsoleStuff {
 		game = new CrosswordGame(knownWords);
 
 		int runde = 1;
+		int pointsTotalLastRound = 0;
 
 		while (true) {
 
 			System.out.print("Runde " + runde++ + " Eingabe: ");
 			String input = makeInput();
-			System.out.println(input + " bringt XXX Punkte! Gesamt: XXX");
+
+			int pointsTotal = game.submit(input);
+			System.out.println("\"" + input + "\" bringt " + (pointsTotal - pointsTotalLastRound) + " Punkte! Gesamt: " + pointsTotal);
+			pointsTotalLastRound = pointsTotal;
 		}
 	}
 
