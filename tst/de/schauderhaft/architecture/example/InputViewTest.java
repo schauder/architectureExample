@@ -10,6 +10,8 @@ import javax.swing.JTextField;
 
 import org.junit.Test;
 
+import de.schauderhaft.architecture.example.swing.thomas.InputView;
+
 public class InputViewTest {
 
 	@Test

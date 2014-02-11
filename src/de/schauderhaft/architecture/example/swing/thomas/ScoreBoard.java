@@ -1,4 +1,4 @@
-package de.schauderhaft.architecture.example;
+package de.schauderhaft.architecture.example.swing.thomas;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;

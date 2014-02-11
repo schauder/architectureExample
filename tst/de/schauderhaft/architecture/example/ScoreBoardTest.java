@@ -7,6 +7,8 @@ import java.awt.Component;
 
 import org.junit.Test;
 
+import de.schauderhaft.architecture.example.swing.thomas.ScoreBoard;
+
 public class ScoreBoardTest {
 
 	ScoreBoard underTest = new ScoreBoard();

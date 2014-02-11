@@ -1,7 +1,9 @@
-package de.schauderhaft.architecture.example;
+package de.schauderhaft.architecture.example.swing.thomas;
 
 import java.util.Arrays;
 import java.util.HashSet;
+
+import de.schauderhaft.architecture.example.CrosswordGame;
 
 public class GuiStarter {
 

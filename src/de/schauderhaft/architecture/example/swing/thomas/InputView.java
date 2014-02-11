@@ -1,4 +1,4 @@
-package de.schauderhaft.architecture.example;
+package de.schauderhaft.architecture.example.swing.thomas;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;

@@ -1,6 +1,8 @@
-package de.schauderhaft.architecture.example;
+package de.schauderhaft.architecture.example.swing.thomas;
 
 import javax.swing.JFrame;
+
+import de.schauderhaft.architecture.example.CrosswordGame;
 
 public class CrosswordController {
 

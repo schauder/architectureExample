@@ -1,7 +1,9 @@
-package de.schauderhaft.architecture.example;
+package de.schauderhaft.architecture.example.swing.thomas;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import de.schauderhaft.architecture.example.CrosswordGame;
 
 public class WordInputActionListener implements ActionListener {
 
