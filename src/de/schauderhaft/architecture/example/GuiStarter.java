@@ -5,16 +5,16 @@ import java.util.HashSet;
 
 public class GuiStarter {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		InputView view = new InputView();
+        InputView view = new InputView();
 
-		CrosswordGame crosswordGame = new CrosswordGame(new HashSet<String>(
-				Arrays.asList("Haus", "Maus", "Auto")));
+        CrosswordGame crosswordGame = new CrosswordGame(new HashSet<String>(
+                Arrays.asList("Haus", "Maus", "Auto")));
 
-		CrossWordController controller = new CrossWordController(view,
-				crosswordGame);
-		controller.start();
+        CrosswordController controller = new CrosswordController(view,
+                crosswordGame);
+        controller.start();
 
-	}
+    }
 }

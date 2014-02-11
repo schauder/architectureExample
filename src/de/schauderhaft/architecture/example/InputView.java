@@ -10,42 +10,43 @@ import javax.swing.JTextField;
 
 public class InputView {
 
-	JFrame frame = new JFrame("CrossWord");
+    JFrame frame = new JFrame("CrossWord");
 
-	JTextField inputfield = new JTextField();
-	JButton submit = new JButton("submit");
-	ScoreBoard score = new ScoreBoard();
+    JTextField inputfield = new JTextField();
+    JButton submit = new JButton("submit");
+    ScoreBoard score = new ScoreBoard();
 
-	public InputView() {
-		inputfield.setPreferredSize(new Dimension(80, 20));
-		frame.getContentPane().setLayout(new FlowLayout());
-		frame.getContentPane().add(inputfield);
-		frame.getContentPane().add(submit);
-		frame.getContentPane().add(score.getScorePanel());
-		frame.pack();
-	}
+    public InputView() {
+        inputfield.setPreferredSize(new Dimension(80, 20));
+        frame.getContentPane().setLayout(new FlowLayout());
+        frame.getContentPane().add(inputfield);
+        frame.getContentPane().add(submit);
 
-	public JFrame getInputView() {
-		return frame;
-	}
+        frame.getContentPane().add(score.getScorePanel());
+        frame.pack();
+    }
 
-	public void addActionForSubmit(ActionListener action) {
-		submit.addActionListener(action);
-	}
+    public JFrame getInputView() {
+        return frame;
+    }
 
-	/**
-	 * Access to inputfield
-	 * 
-	 * @return
-	 */
-	public String getInput() {
-		return inputfield.getText();
+    public void addActionForSubmit(ActionListener action) {
+        submit.addActionListener(action);
+    }
 
-	}
+    /**
+     * Access to inputfield
+     * 
+     * @return
+     */
+    public String getInput() {
+        return inputfield.getText();
 
-	public void newScore(int points) {
-		score.newScore(points);
+    }
 
-	}
+    public void newScore(int points) {
+        score.newScore(points);
+
+    }
 
 }

@@ -2,24 +2,24 @@ package de.schauderhaft.architecture.example;
 
 import javax.swing.JFrame;
 
-public class CrossWordController {
+public class CrosswordController {
 
-	private InputView view;
-	private CrosswordGame crosswordGame;
+    private final InputView view;
+    private final CrosswordGame crosswordGame;
 
-	public CrossWordController(InputView view, CrosswordGame crosswordGame) {
-		super();
-		this.view = view;
-		this.crosswordGame = crosswordGame;
-	}
+    public CrosswordController(InputView view, CrosswordGame crosswordGame) {
+        super();
+        this.view = view;
+        this.crosswordGame = crosswordGame;
+    }
 
-	public void start() {
+    public void start() {
 
-		view.addActionForSubmit(new WordInputActionListener(view, crosswordGame));
+        view.addActionForSubmit(new WordInputActionListener(view, crosswordGame));
 
-		view.getInputView().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		view.getInputView().setVisible(true);
+        view.getInputView().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        view.getInputView().setVisible(true);
 
-	}
+    }
 
 }
