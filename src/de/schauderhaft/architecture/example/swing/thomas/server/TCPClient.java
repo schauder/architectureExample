@@ -8,6 +8,60 @@ import java.net.Socket;
 
 public class TCPClient {
 
+    public String request(String word) {
+
+	Socket clientSocket = null;
+	DataOutputStream socketToServer = null;
+	BufferedReader responseFromServer = null;
+	try {
+	    clientSocket = new Socket("localhost", 6789);
+	    socketToServer = new DataOutputStream(
+		    clientSocket.getOutputStream());
+
+	    socketToServer.writeBytes(word + '\n');
+
+	    responseFromServer = new BufferedReader(new InputStreamReader(
+		    clientSocket.getInputStream()));
+	    String response = responseFromServer.readLine();
+	    System.out.println("FROM SERVER: " + response);
+
+	    return response;
+	} catch (IOException e) {
+	    throw new RuntimeException("Ohne Server keine Kekse!");
+	} finally {
+	    // close should be in finally block
+	    closeStream(clientSocket, socketToServer, responseFromServer);
+	}
+    }
+
+    private void closeStream(Socket clientSocket, DataOutputStream socketOut,
+	    BufferedReader fromServer) {
+	if (clientSocket != null) {
+	    try {
+		clientSocket.close();
+	    } catch (IOException e) {
+		System.err.println(e);
+	    }
+	}
+	if (socketOut != null) {
+	    try {
+		socketOut.close();
+	    } catch (IOException e) {
+		System.err.println(e);
+	    }
+
+	}
+	if (fromServer != null) {
+
+	    try {
+		fromServer.close();
+	    } catch (IOException e) {
+		System.err.println(e);
+	    }
+	}
+
+    }
+
     public static void main(String[] args) {
 	BufferedReader inFromUser = new BufferedReader(new InputStreamReader(
 		System.in));

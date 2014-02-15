@@ -27,19 +27,26 @@ public class TCPServer {
 	    Socket connectionSocket = welcomeSocket.accept();
 	    BufferedReader inFromClient = new BufferedReader(
 		    new InputStreamReader(connectionSocket.getInputStream()));
-	    DataOutputStream outToClient = new DataOutputStream(
-		    connectionSocket.getOutputStream());
 	    clientSentence = inFromClient.readLine();
 	    System.out.println("Received: " + clientSentence);
 
 	    int answer = game.submit(clientSentence);
 
-	    capitalizedSentence = "Antwort ist: " + String.valueOf(answer);
-	    outToClient.writeBytes(capitalizedSentence);
+	    responseAnswer(connectionSocket, answer);
 
 	    inFromClient.close();
 	    connectionSocket.close();
 	}
+    }
+
+    private void responseAnswer(Socket connectionSocket, int answer)
+	    throws IOException {
+	String capitalizedSentence;
+	DataOutputStream outToClient = new DataOutputStream(
+		connectionSocket.getOutputStream());
+	capitalizedSentence = "Antwort ist: " + String.valueOf(answer);
+	outToClient.writeBytes(capitalizedSentence);
+	outToClient.close();
     }
 
     public static void main(String argv[]) throws Exception {
