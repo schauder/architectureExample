@@ -21,7 +21,6 @@ public class TCPServer {
 
     public void startServer(int port) throws IOException {
 	String clientSentence;
-	String capitalizedSentence;
 	ServerSocket welcomeSocket = new ServerSocket(port);
 	while (true) {
 	    Socket connectionSocket = welcomeSocket.accept();
@@ -41,11 +40,9 @@ public class TCPServer {
 
     private void responseAnswer(Socket connectionSocket, int answer)
 	    throws IOException {
-	String capitalizedSentence;
 	DataOutputStream outToClient = new DataOutputStream(
 		connectionSocket.getOutputStream());
-	capitalizedSentence = "Antwort ist: " + String.valueOf(answer);
-	outToClient.writeBytes(capitalizedSentence);
+	outToClient.writeBytes(String.valueOf(answer));
 	outToClient.close();
     }
 

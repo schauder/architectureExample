@@ -8,7 +8,7 @@ import java.net.Socket;
 
 public class TCPClient {
 
-    public String request(String word) {
+    public int request(String word) {
 
 	Socket clientSocket = null;
 	DataOutputStream socketToServer = null;
@@ -25,7 +25,7 @@ public class TCPClient {
 	    String response = responseFromServer.readLine();
 	    System.out.println("FROM SERVER: " + response);
 
-	    return response;
+	    return Integer.valueOf(response);
 	} catch (IOException e) {
 	    throw new RuntimeException("Ohne Server keine Kekse!");
 	} finally {
@@ -62,6 +62,11 @@ public class TCPClient {
 
     }
 
+    /**
+     * FŸr Testzwecke zum separaten Starten
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
 	BufferedReader inFromUser = new BufferedReader(new InputStreamReader(
 		System.in));
