@@ -38,8 +38,8 @@ public class SwingGuiFactory implements GuiFactory {
             }
         });
 
-        contentPane.add(textbox);
         contentPane.setLayout(new FlowLayout());
+        contentPane.add(textbox);
         contentPane.add(submit);
         contentPane.add(scoreBoardBuilder.getComponent());
     }
