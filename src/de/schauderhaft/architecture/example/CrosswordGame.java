@@ -10,7 +10,7 @@ public class CrosswordGame {
         this.knownWords = knownWords;
     }
 
-    private final Set<String> usedWords = new HashSet<>();
+    private final Set<String> usedWords = new HashSet<String>();
     private int points;
 
     public int submit(String word) {
