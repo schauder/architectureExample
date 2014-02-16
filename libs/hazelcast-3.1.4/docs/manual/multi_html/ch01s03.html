@@ -1,0 +1,118 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>1.3.&nbsp;Upgrading from 2.x versions</title><link rel="stylesheet" type="text/css" href="./docbook.css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"><meta name="keywords" content="hazelcast, distributed, cache, distributed cache, cluster, data grid, in-memory data grid"><link rel="home" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="up" href="ch01.html" title="Chapter&nbsp;1.&nbsp;Introduction"><link rel="prev" href="ch01s02.html" title="1.2.&nbsp;What's new in 3.0?"><link rel="next" href="ch01s04.html" title="1.4.&nbsp;Getting Started (Tutorial)"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">1.3.&nbsp;Upgrading from 2.x versions</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch01s02.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;1.&nbsp;Introduction</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch01s04.html">Next</a></td></tr></table><hr></div><div class="sect1" title="1.3.&nbsp;Upgrading from 2.x versions"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="MigratingTo3"></a>1.3.&nbsp;Upgrading from 2.x versions</h2></div></div></div><p>
+        In this section, we list the changes what users should take into account before upgrading to Hazelcast 3.1 from
+        earlier versions of Hazelcast.
+    </p><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="bold"><strong>Removal of deprecated static methods:</strong></span><p>
+                    The static methods of Hazelcast class reaching hazelcast data components have been removed.
+                    The functionality of these methods can be reached from HazelcastInstance interface.
+                    Namely you should replace following:
+                    </p><pre class="programlisting">
+Map&lt;Integer, String&gt; mapCustomers = Hazelcast.getMap(<font font-style="normal" color="#008000">"customers"</font>);</pre><p>
+                    with
+                    </p><pre class="programlisting">
+HazelcastInstance instance = Hazelcast.newHazelcastInstance(cfg);
+<em class="hl-comment" style="color: silver">// or if you already started an instance</em>
+<em class="hl-comment" style="color: silver">// HazelcastInstance instance = Hazelcast.getHazelcastInstanceByName("instance1");</em>
+Map&lt;Integer, String&gt; mapCustomers = instance.getMap(<font font-style="normal" color="#008000">"customers"</font>);</pre><p>
+                </p></li><li class="listitem"><span class="bold"><strong>Removal of lite members:</strong></span><p>
+                    With 3.0 there will be no member type as lite member.
+                    As 3.0 clients are smart client that they know in which node the data is located, you can replace
+                    your lite members with native clients.
+                </p></li><li class="listitem"><span class="bold"><strong>Renaming "instance" to "distributed object":</strong></span><p>
+                    Before 3.0 there was a confusion for the term "instance".
+                    It was used for both the cluster members and the distributed objects (map, queue, topic etc.
+                    instances).
+                    Starting 3.0, the term instance will be only used for hazelcast instances, namely cluster members.
+                    We will use the term "distributed object" for map, queue etc. instances.
+                    So you should replace the related methods with the new renamed ones:
+                    As 3.0 clients are smart client that they know in which node the data is located, you can replace
+                    your lite members with native clients.
+                    </p><pre class="programlisting">
+<strong class="hl-keyword">public</strong> <strong class="hl-keyword">static</strong> <strong class="hl-keyword">void</strong> main(String[] args) <strong class="hl-keyword">throws</strong> InterruptedException {
+    Config cfg = <strong class="hl-keyword">new</strong> Config();
+    HazelcastInstance hz = Hazelcast.newHazelcastInstance(cfg);
+    IMap map = hz.getMap(<font font-style="normal" color="#008000">"test"</font>);
+    Collection&lt;Instance&gt; instances = hz.getInstances();
+    <strong class="hl-keyword">for</strong> (Instance instance : instances) {
+        <strong class="hl-keyword">if</strong>(instance.getInstanceType() == Instance.InstanceType.MAP) {
+        System.out.println(<font font-style="normal" color="#008000">"there is a map with name:"</font>+instance.getId());
+        }
+    }
+}
+    </pre><p>
+                    with
+                    </p><pre class="programlisting">
+<strong class="hl-keyword">public</strong> <strong class="hl-keyword">static</strong> <strong class="hl-keyword">void</strong> main(String[] args) <strong class="hl-keyword">throws</strong> InterruptedException {
+    Config cfg = <strong class="hl-keyword">new</strong> Config();
+    HazelcastInstance hz = Hazelcast.newHazelcastInstance(cfg);
+    IMap map = hz.getMap(<font font-style="normal" color="#008000">"test"</font>);
+    Collection&lt;DistributedObject&gt; distributedObjects = hz.getDistributedObjects();
+        <strong class="hl-keyword">for</strong> (DistributedObject distributedObject : distributedObjects) {
+            <strong class="hl-keyword">if</strong>(distributedObject <strong class="hl-keyword">instanceof</strong> IMap)
+            System.out.println(<font font-style="normal" color="#008000">"there is a map with name:"</font>+distributedObject.getName());
+        }
+}
+                            </pre><p>
+
+                </p></li><li class="listitem"><span class="bold"><strong>Package structure change:</strong></span><p>
+                    PartitionService has been moved to package "com.hazelcast.core" from "com.hazelcast.partition"
+                </p></li><li class="listitem"><span class="bold"><strong>Listener API change:</strong></span><p>
+                    Before 3.0, you can removeListener methods was taking the Listener object as parameter.
+                    But it causes confusion as same listener object may be used as parameter for different listener
+                    registrations.
+                    So we have changed the listener API. Anymore, addListener methods return you an unique id and you
+                    can remove listener by using this id.
+                    So you should do following replacement if needed:
+                    </p><pre class="programlisting">
+IMap map = instance.getMap(<font font-style="normal" color="#008000">"map"</font>);
+map.addEntryListener(listener,true);
+map.removeEntryListener(listener);
+    </pre><p>
+                    with
+                    </p><pre class="programlisting">
+IMap map = instance.getMap(<font font-style="normal" color="#008000">"map"</font>);
+String listenerId = map.addEntryListener(listener, true);
+map.removeEntryListener(listenerId);
+    </pre><p>
+                </p></li><li class="listitem"><span class="bold"><strong>IMap changes:</strong></span><div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem"><p>
+                            tryRemove(K key, long timeout, TimeUnit timeunit) returns boolean indicating whether
+                            operation is successful.
+                        </p></li><li class="listitem"><p>
+                            tryLockAndGet(K key, long time, TimeUnit timeunit) is removed.
+                        </p></li><li class="listitem"><p>
+                            putAndUnlock(K key, V value) is removed.
+                        </p></li><li class="listitem"><p>
+                            lockMap(long time, TimeUnit timeunit) and unlockMap() are removed
+                        </p></li><li class="listitem"><p>
+                            getMapEntry(K key) is renamed as getEntryView(K key). The returned object's type, MapEntry
+                            class is renamed as EntryView.
+                        </p></li><li class="listitem"><p>
+                           There is no predefined names for merge policies. You just give the full class name of the merge policy implementation.
+                            </p><pre class="programlisting">
+&lt;merge-policy&gt;com.hazelcast.map.merge.PassThroughMergePolicy&lt;/merge-policy&gt;
+    </pre><p>
+                        </p>
+                        Also MergePolicy interface has been renamed to MapMergePolicy and also returning null from the implemented merge() method causes the existing entry to be removed.
+                    </li></ul></div></li><li class="listitem"><span class="bold"><strong>IQueue changes:</strong></span><p>There is no change on IQueue API but there are changes on how IQueue is configured. With Hazelcast
+                    3.0 there will not be backing map configuration for queue.
+                    Settings like backup count will be directly configured on queue config.
+                    For queue configuration details, see
+                    <a class="link" href="ch02s02.html" title="2.2.&nbsp;Distributed Queue"> Distributed Queue </a>
+                    page.
+                </p></li><li class="listitem"><span class="bold"><strong>Transaction API change:</strong></span><p>In Hazelcast 3.0, transaction API is completely different. See transactions part for the new API:
+                    <a class="link" href="ch09.html" title="Chapter&nbsp;9.&nbsp;Transactions"> Distributed Transactions </a>
+                </p></li><li class="listitem"><span class="bold"><strong>ExecutorService API change:</strong></span><p>Classes MultiTask and DistributedTask have been removed. All the functionality is supported by the newly presented interface IExecutorService.
+                    See distributed execution part for detailed usage example:
+                    <a class="link" href="ch10.html#DistributedExecution" title="10.1.&nbsp;Distributed Execution"> Distributed Execution </a>
+                </p></li><li class="listitem">
+                LifeCycleService API has been simplified. pause(), resume(), restart() methods have been removed.
+            </li><li class="listitem">
+                AtomicNumber class has been renamed to IAtomicLong.
+            </li><li class="listitem">
+                ICountDownLatch await() operation has been removed. We expect users to use await method with timeout parameters.
+            </li><li class="listitem">
+                ISemaphore API has been substantially changed. attach(), detach() methods have been removed.
+            </li></ul></div><p>
+    </p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch01s02.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ch01.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch01s04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">1.2.&nbsp;What's new in 3.0?&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;1.4.&nbsp;Getting Started (Tutorial)</td></tr></table></div></body></html>

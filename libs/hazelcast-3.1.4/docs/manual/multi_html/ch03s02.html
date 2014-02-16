@@ -1,0 +1,136 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>3.2.&nbsp;Portable Serialization</title><link rel="stylesheet" type="text/css" href="./docbook.css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"><meta name="keywords" content="hazelcast, distributed, cache, distributed cache, cluster, data grid, in-memory data grid"><link rel="home" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Serialization"><link rel="prev" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Serialization"><link rel="next" href="ch03s03.html" title="3.3.&nbsp;Custom Serialization"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">3.2.&nbsp;Portable Serialization</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;3.&nbsp;Serialization</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr></table><hr></div><div class="sect1" title="3.2.&nbsp;Portable Serialization"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="PortableSerialization"></a>3.2.&nbsp;Portable Serialization</h2></div></div></div><p>
+        As an alternative to the existing serialization methods, Hazelcast offers a Portable serialization that have
+        the following advantages
+
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                Support multiversion of the same object type.
+            </li><li class="listitem">
+                Fetching individual fields without having to rely on reflection
+            </li><li class="listitem">
+                Querying and indexing support without de-serialization and/or reflection
+            </li></ul></div><p>
+
+        </p><p>
+            In order to support these features, a serialized Portable object contains meta information like the version
+            and
+            the concrete location of the each field in the binary data. This way Hazelcast is able to navigate in the
+            byte[]
+            and de-serialize only the required field without actually de-serializing the whole object which improves
+            the Query performance.
+        </p><p>
+        </p><p>
+            With multiversion support, you can have two nodes where each of them having different versions of the same
+            Object and Hazelcast will store both meta information and use the correct one to serialize and de-serialize
+            Portable objects depending on the node. This is very helpful when you are doing a rolling upgrade without
+            shutting down the cluster.
+        </p><p>
+        </p><p>
+            Also note that Portable serialization is totally language independent and is used as
+            the binary protocol between Hazelcast server and clients.
+        </p><p>
+        </p><p>
+            A sample Portable implementation of a Foo class will look like the following.
+
+            </p><pre class="programlisting">
+<strong class="hl-keyword">public</strong> <strong class="hl-keyword">class</strong> Foo <strong class="hl-keyword">implements</strong> Portable{
+    <strong class="hl-keyword">final</strong> <strong class="hl-keyword">static</strong> <strong class="hl-keyword">int</strong> ID = <span class="hl-number">5</span>;
+
+    <strong class="hl-keyword">private</strong> String foo;
+
+    <strong class="hl-keyword">public</strong> String getFoo() {
+        <strong class="hl-keyword">return</strong> foo;
+    }
+
+    <strong class="hl-keyword">public</strong> <strong class="hl-keyword">void</strong> setFoo(String foo) {
+        <strong class="hl-keyword">this</strong>.foo = foo;
+    }
+
+    <em><span class="hl-annotation" style="color: gray">@Override</span></em>
+    <strong class="hl-keyword">public</strong> <strong class="hl-keyword">int</strong> getFactoryId() {
+        <strong class="hl-keyword">return</strong> <span class="hl-number">1</span>;
+    }
+
+    <em><span class="hl-annotation" style="color: gray">@Override</span></em>
+    <strong class="hl-keyword">public</strong> <strong class="hl-keyword">int</strong> getClassId() {
+        <strong class="hl-keyword">return</strong> ID;
+    }
+
+    <em><span class="hl-annotation" style="color: gray">@Override</span></em>
+    <strong class="hl-keyword">public</strong> <strong class="hl-keyword">void</strong> writePortable(PortableWriter writer) <strong class="hl-keyword">throws</strong> IOException {
+        writer.writeUTF(<font font-style="normal" color="#008000">"foo"</font>, foo);
+    }
+
+    <em><span class="hl-annotation" style="color: gray">@Override</span></em>
+    <strong class="hl-keyword">public</strong> <strong class="hl-keyword">void</strong> readPortable(PortableReader reader) <strong class="hl-keyword">throws</strong> IOException {
+        foo = reader.readUTF(<font font-style="normal" color="#008000">"foo"</font>);
+    }
+}
+        </pre><p>
+        </p><p>
+        </p><p>
+            Similar to
+            <code class="literal">IdentifiedDataSerializable</code>,
+            a Portable Class must provide
+            <code class="literal">classId</code>
+            and<code class="literal">factoryId</code>. The Factory object will be used to create
+            the Portable object given the <code class="literal">classId</code>.
+        </p><p>
+
+        </p><p>
+
+            A sample
+            <code class="literal">Factory</code>
+            could be implemented as following:
+            </p><pre class="programlisting">
+<strong class="hl-keyword">public</strong> <strong class="hl-keyword">class</strong> MyPortableFactory <strong class="hl-keyword">implements</strong> PortableFactory {
+
+    <em><span class="hl-annotation" style="color: gray">@Override</span></em>
+    <strong class="hl-keyword">public</strong> Portable create(<strong class="hl-keyword">int</strong> classId) {
+        <strong class="hl-keyword">if</strong> (Foo.ID == classId)
+            <strong class="hl-keyword">return</strong> <strong class="hl-keyword">new</strong> Foo();
+        <strong class="hl-keyword">else</strong> <strong class="hl-keyword">return</strong> null;
+     }
+}
+            </pre><p>
+
+            The last step is to register the
+            <code class="literal">Factory</code>
+            to the <code class="literal">SerializationConfig</code>.
+
+            </p><p>
+                Programmatic Configuration
+                </p><pre class="programlisting">
+Config config = <strong class="hl-keyword">new</strong> Config();
+config.getSerializationConfig().addPortableFactory(<span class="hl-number">1</span>, <strong class="hl-keyword">new</strong> MyPortableFactory());
+                </pre><p>
+            </p><p>
+
+            </p><p>
+                XML Configuration
+                </p><pre class="programlisting">
+&lt;hazelcast&gt;
+    &lt;serialization&gt;
+        &lt;portable-version&gt;<span class="hl-number">0</span>&lt;/portable-version&gt;
+        &lt;portable-factories&gt;
+            &lt;portable-factory factory-id=<font font-style="normal" color="#008000">"1"</font>&gt;com.hazelcast.nio.serialization.MyPortableFactory&lt;/portable-factory&gt;
+        &lt;/portable-factories&gt;
+    &lt;/serialization&gt;
+&lt;/hazelcast&gt;
+                </pre><p>
+            </p><p>
+
+            Note that the <code class="literal">id</code> that is passed to the
+            <code class="literal">SerializationConfig</code>
+            is same as the
+            <code class="literal">factoryId</code>
+            that
+            <code class="literal">Foo</code>
+            class returns.
+        </p><p>
+
+        </p><p>
+            TODO: ClassDefinitionBuilder...
+        </p><p>
+    </p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ch03.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;3.&nbsp;Serialization&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;3.3.&nbsp;Custom Serialization</td></tr></table></div></body></html>

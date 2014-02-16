@@ -1,0 +1,165 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;3.&nbsp;Serialization</title><link rel="stylesheet" type="text/css" href="./docbook.css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"><meta name="keywords" content="hazelcast, distributed, cache, distributed cache, cluster, data grid, in-memory data grid"><link rel="home" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="up" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="prev" href="ch02s08.html" title="2.8.&nbsp;Distributed Events"><link rel="next" href="ch03s02.html" title="3.2.&nbsp;Portable Serialization"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;3.&nbsp;Serialization</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch02s08.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch03s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;3.&nbsp;Serialization"><div class="titlepage"><div><div><h2 class="title"><a name="Serialization"></a>Chapter&nbsp;3.&nbsp;Serialization</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch03.html#DataSerializable">3.1. Data Serializable</a></span></dt><dt><span class="sect1"><a href="ch03s02.html">3.2. Portable Serialization</a></span></dt><dt><span class="sect1"><a href="ch03s03.html">3.3. Custom Serialization</a></span></dt></dl></div><p>
+
+    </p><p>All your distributed objects such as your key and value objects, objects you offer into
+        distributed queue and your distributed callable/runnable objects have to
+        be<code class="literal">Serializable</code>.
+    </p><p>
+    </p><p>Hazelcast serializes all your objects into an instance
+        of<code class="literal">com.hazelcast.nio.serialization.Data</code>.
+        <code class="literal">Data</code>
+        is the binary
+        representation of an object.
+
+        When Hazelcast serializes an object into<code class="literal">Data</code>,
+        it first checks whether the object is an instance of
+        <code class="literal">com.hazelcast.nio.serialization.DataSerializable</code>, if not it checks if it is an instance of
+        <code class="literal">com.hazelcast.nio.serialization.Portable</code>
+        and serializes it accordingly.
+
+        For the following types Hazelcast optimizes the serialization a user can not override this behaviour.
+
+
+        <code class="literal">Byte</code>,
+        <code class="literal">Boolean</code>,
+        <code class="literal">Character</code>,
+        <code class="literal">Short</code>,
+        <code class="literal">Integer</code>,
+        <code class="literal">Long</code>,
+        <code class="literal">Float</code>,
+        <code class="literal">Double</code>,
+        <code class="literal">byte[]</code>,
+        <code class="literal">char[]</code>,
+        <code class="literal">short[]</code>,
+        <code class="literal">int[]</code>,
+        <code class="literal">long[]</code>,
+        <code class="literal">float[]</code>,
+        <code class="literal">double[]</code>,
+        <code class="literal">String</code>,
+
+
+        Hazelcast also optimizes the following types, however you can override them by creating a custom serializer
+        and registering it.
+        See
+        <a class="link" href="ch03s03.html" title="3.3.&nbsp;Custom Serialization">Custom Serialization</a>
+        for more information.
+
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Date</li><li class="listitem">BigInteger</li><li class="listitem">BigDecimal</li><li class="listitem">Class</li><li class="listitem">Externalizable</li><li class="listitem">Serializable</li></ul></div><p>
+
+        Not that if the object is not instance of any explicit type, Hazelcast uses Java Serialization
+        for Serializable and Externalizable objects. The default behaviour can be changed using a
+        <a class="link" href="ch03s03.html" title="3.3.&nbsp;Custom Serialization">Custom Serialization</a>.
+
+    </p><p>
+</p><div class="sect1" title="3.1.&nbsp;Data Serializable"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="DataSerializable"></a>3.1.&nbsp;Data Serializable</h2></div></div></div><p>
+        For a faster serialization of objects, Hazelcast recommends to implement
+        <code class="literal">com.hazelcast.nio.serialization.IdentifiedDataSerializable</code>
+        which is slightly better
+        version of
+        <code class="literal">com.hazelcast.nio.serialization.DataSerializable</code>.
+        </p><p>
+            Here is an example of a class implementing
+            <code class="literal">com.hazelcast.nio.serialization.DataSerializable</code>
+            interface.
+            </p><pre class="programlisting"><strong class="hl-keyword">public</strong> <strong class="hl-keyword">class</strong> Address <strong class="hl-keyword">implements</strong> com.hazelcast.nio.serialization.DataSerializable {
+    <strong class="hl-keyword">private</strong> String street;
+    <strong class="hl-keyword">private</strong> <strong class="hl-keyword">int</strong> zipCode;
+    <strong class="hl-keyword">private</strong> String city;
+    <strong class="hl-keyword">private</strong> String state;
+
+    <strong class="hl-keyword">public</strong> Address() {}
+
+    <em class="hl-comment" style="color: silver">//getters setters..</em>
+
+    <strong class="hl-keyword">public</strong> <strong class="hl-keyword">void</strong> writeData(ObjectDataOutput out) <strong class="hl-keyword">throws</strong> IOException {
+        out.writeUTF(street);
+        out.writeInt(zipCode);
+        out.writeUTF(city);
+        out.writeUTF(state);
+    }
+
+    <strong class="hl-keyword">public</strong> <strong class="hl-keyword">void</strong> readData(ObjectDataInput in) <strong class="hl-keyword">throws</strong> IOException {
+        street    = in.readUTF();
+        zipCode = in.readInt();
+        city    = in.readUTF();
+        state    = in.readUTF();
+    }
+}
+</pre><p>
+        </p><p>
+        Lets take a look at another example which is encapsulating a
+        <code class="literal">DataSerializable</code>
+        field.</p><pre class="programlisting"><strong class="hl-keyword">public</strong> <strong class="hl-keyword">class</strong> Employee <strong class="hl-keyword">implements</strong> com.hazelcast.nio.serialization.DataSerializable {
+    <strong class="hl-keyword">private</strong> String firstName;
+    <strong class="hl-keyword">private</strong> String lastName;
+    <strong class="hl-keyword">private</strong> <strong class="hl-keyword">int</strong> age;
+    <strong class="hl-keyword">private</strong> <strong class="hl-keyword">double</strong> salary;
+    <strong class="hl-keyword">private</strong> Address address; <em class="hl-comment" style="color: silver">//address itself is DataSerializable</em>
+
+    <strong class="hl-keyword">public</strong> Employee() {}
+
+    <em class="hl-comment" style="color: silver">//getters setters..</em>
+
+    <strong class="hl-keyword">public</strong> <strong class="hl-keyword">void</strong> writeData(ObjectDataOutput out) <strong class="hl-keyword">throws</strong> IOException {
+        out.writeUTF(firstName);
+        out.writeUTF(lastName);
+        out.writeInt(age);
+        out.writeDouble (salary);
+        address.writeData (out);
+    }
+
+    <strong class="hl-keyword">public</strong> <strong class="hl-keyword">void</strong> readData (ObjectDataInput in) <strong class="hl-keyword">throws</strong> IOException {
+        firstName = in.readUTF();
+        lastName  = in.readUTF();
+        age       = in.readInt();
+        salary       = in.readDouble();
+        address   = <strong class="hl-keyword">new</strong> Address();
+        <em class="hl-comment" style="color: silver">// since Address is DataSerializable let it read its own internal state</em>
+        address.readData (in);
+    }
+}
+</pre><p>As you can see, since
+        <code class="literal">address</code>
+        field itself
+        is<code class="literal">DataSerializable</code>, it is calling
+        <code class="literal">address.writeData(out)</code>
+        when writing and
+        <code class="literal">address.readData(in)</code>
+        when reading. Also note that the order of writing and reading fields should be the same.
+        While Hazelcast serializes a DataSerializable it writes the className first and when de-serializes it,
+        className is used to instantiate the object using reflection.
+
+
+        <span class="bold"><strong>IdentifiedDataSerializable</strong></span>
+
+        To avoid the reflection and long class names
+        <code class="literal">IdentifiedDataSerializable</code>
+        can be used instead of<code class="literal">DataSerializable</code>. Note that
+        <code class="literal">IdentifiedDataSerializable</code>
+        extends
+        <code class="literal">DataSerializable</code>
+        and introduces two new methods.
+
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                int getId();
+            </li><li class="listitem">
+                int getFactoryId();
+            </li></ul></div><p>
+
+        IdentifiedDataSerializable uses
+        <code class="literal">getId()</code>
+        instead of className and uses getFactoryId()
+        to load the class given the Id.
+        To complete the implementation a
+        <code class="literal">com.hazelcast.nio.serialization.DataSerializableFactory</code>
+        should also be implemented and registered into
+        <code class="literal">SerializationConfig</code>
+        which can be accessed from
+        <code class="literal">Config.getSerializationConfig()</code>. The Factories responsibility is to return an instance of
+        the right
+        <code class="literal">IdentifiedDataSerializable</code>
+        object, given the id. So far this is the most efficient
+        way of Serialization that Hazelcast supports of the shelf.
+
+    </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch02s08.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch03s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">2.8.&nbsp;Distributed Events&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;3.2.&nbsp;Portable Serialization</td></tr></table></div></body></html>

@@ -1,0 +1,112 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;1.&nbsp;Introduction</title><link rel="stylesheet" type="text/css" href="./docbook.css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"><meta name="keywords" content="hazelcast, distributed, cache, distributed cache, cluster, data grid, in-memory data grid"><link rel="home" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="up" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="prev" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="next" href="ch01s02.html" title="1.2.&nbsp;What's new in 3.0?"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;1.&nbsp;Introduction</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="index.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch01s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;1.&nbsp;Introduction"><div class="titlepage"><div><div><h2 class="title"><a name="Introduction"></a>Chapter&nbsp;1.&nbsp;Introduction</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch01.html#WhatsNew31">1.1. What's new in 3.1?</a></span></dt><dt><span class="sect1"><a href="ch01s02.html">1.2. What's new in 3.0?</a></span></dt><dt><span class="sect1"><a href="ch01s03.html">1.3. Upgrading from 2.x versions</a></span></dt><dt><span class="sect1"><a href="ch01s04.html">1.4. Getting Started (Tutorial)</a></span></dt></dl></div><p>
+    Hazelcast is a clustering and highly scalable data distribution platform for Java. Hazelcast helps architects and
+    developers to easily design and develop faster, highly scalable and reliable applications for their businesses.
+    </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Distributed implementations of
+                <code class="literal">java.util.{Queue, Set, List, Map}</code>
+            </p></li><li class="listitem"><p>Distributed implementation of
+                <code class="literal">java.util.concurrent.ExecutorService</code>
+            </p></li><li class="listitem"><p>Distributed implementation of
+                <code class="literal">java.util.concurrency.locks.Lock</code>
+            </p></li><li class="listitem"><p>Distributed
+                <code class="literal">Topic</code>
+                for publish/subscribe messaging
+            </p></li><li class="listitem"><p>Transaction support and J2EE container integration via JCA
+            </p></li><li class="listitem"><p>Distributed listeners and events
+            </p></li><li class="listitem"><p>Support for cluster info and membership events
+            </p></li><li class="listitem"><p>Dynamic HTTP session clustering
+            </p></li><li class="listitem"><p>Dynamic clustering
+            </p></li><li class="listitem"><p>Dynamic scaling to hundreds of servers
+            </p></li><li class="listitem"><p>Dynamic partitioning with backups
+            </p></li><li class="listitem"><p>Dynamic fail-over
+            </p></li></ul></div><p>
+    </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Super simple to use; include a single jar
+            </p></li><li class="listitem"><p>Super fast; thousands of operations per sec.
+            </p></li><li class="listitem"><p>Super small; less than a MB
+            </p></li><li class="listitem"><p>Super efficient; very nice to CPU and RAM
+            </p></li></ul></div><p>
+    To install Hazelcast:
+    </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Download hazelcast-_version_.zip from
+                <a class="link" href="http://www.hazelcast.com" target="_top">www.hazelcast.com</a>
+            </p></li><li class="listitem"><p>Unzip hazelcast-_version_.zip file
+            </p></li><li class="listitem"><p>Add hazelcast-_version_.jar file into your classpath
+            </p></li></ul></div><p>
+    Hazelcast is pure Java. JVMs that are running Hazelcast will dynamically cluster. Although by default Hazelcast will
+    use multicast for discovery, it can also be configured to only use TCP/IP for environments where multicast is not
+    available or preferred (<a class="link" href="ch14s02.html#ConfigTcpIp" title="14.2.1.&nbsp;Configuring TCP/IP Cluster">Click here for more info</a>). Communication among
+    cluster members is always
+    TCP/IP with Java NIO beauty. Default configuration comes with 1 backup so if one node fails, no data will be lost.
+    It is as simple as using<code class="literal">java.util.{Queue, Set, List, Map}</code>. Just add the hazelcast.jar into your
+    classpath and start coding.
+</p><div class="sect1" title="1.1.&nbsp;What's new in 3.1?"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="WhatsNew31"></a>1.1.&nbsp;What's new in 3.1?</h2></div></div></div><p>
+        <span class="bold"><strong>Elastic Memory<sup>(Enterprise Edition Only)</sup></strong></span>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                Elastic Memory is now available.
+                For additional info see <a class="link" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Elastic Memory (Enterprise Edition Only)">Elastic Memory</a> section.
+            </li></ul></div><p>
+    </p><p>
+        <span class="bold"><strong>Security<sup>(Enterprise Edition Only)</sup></strong></span>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                Hazelcast Security is now available.
+                For additional info see <a class="link" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Security (Enterprise Edition Only)">Security</a> section.
+            </li></ul></div><p>
+    </p><p>
+        <span class="bold"><strong>JCA</strong></span>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                Hazelcast JCA integration is back. For additional info see <a class="link" href="ch09s02.html" title="9.2.&nbsp;J2EE Integration">J2EE Integration</a> section.
+            </li></ul></div><p>
+    </p><p>
+        <span class="bold"><strong>Controlled Partitioning</strong></span>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                Controlled Partitioning is the ability to control the partition of certain DistributedObjects like the IQueue,
+                IAtomicLong or ILock. This will make collocating related data easier.
+
+                For additional info see our blog post:
+                <a class="link" href="http://blog.hazelcast.com/blog/2013/08/25/controlled-partitioning/" target="_top">Controlled Partitioning</a></li><li class="listitem">
+                Hazelcast map also supports custom partitioning strategies. A <code class="code">PartitioningStrategy</code> can be defined
+                in map configuration.
+            </li></ul></div><p>
+    </p><p>
+        <span class="bold"><strong>Map</strong></span>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><code class="code">TransactionalMap</code> now supports <code class="code">keySet()</code>, <code class="code">keySet(predicate)</code>,
+                <code class="code">values()</code> and <code class="code">values(predicate)</code> methods.
+            </li><li class="listitem">
+                Eviction based on <code class="code">USED_HEAP_PERCENTAGE</code> or <code class="code">USED_HEAP_SIZE</code> now takes account
+                real heap memory size consumed by map.
+            </li><li class="listitem"><code class="code">SqlPredicate</code> now supports '\' as escape character. See <a class="link" href="ch02.html#MapQuery" title="2.1.4.&nbsp;Query">MapQuery</a> section for more info.
+            </li><li class="listitem"><code class="code">SqlPredicate</code> now supports regular expressions using <code class="code">REGEX</code> keyword.
+                For example; <code class="code">map.values(new SqlPredicate("name REGEX .*earl$"))</code>
+                See <a class="link" href="ch02.html#MapQuery" title="2.1.4.&nbsp;Query">MapQuery</a> section for more info.
+            </li></ul></div><p>
+    </p><p>
+        <span class="bold"><strong>Queue</strong></span>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                Hazelcast queue now supports <code class="code">QueueStoreFactory</code> that will be used to create custom <code class="code">QueueStore</code>s
+                for persistent queues. <code class="code">QueueStoreFactory</code> is similar to map's <code class="code">MapStoreFactory</code>.
+            </li><li class="listitem"><code class="code">TransactionalQueue</code> now supports <code class="code">peek()</code> and <code class="code">peek(timeout, timeunit)</code> methods.
+            </li></ul></div><p>
+    </p><p>
+        <span class="bold"><strong>Client</strong></span>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                Client now has SSL support. See <a class="link" href="ch14s02.html#SSL" title="14.2.5.&nbsp;SSL">SSL</a> section.
+            </li><li class="listitem">
+                Client also supports custom socket implementations using <code class="code">SocketFactory</code> API.
+                A custom socket factory can be defined in <code class="code">ClientConfig</code>;
+                <code class="code">clientConfig.getSocketOptions().setSocketFactory(socketFactory)</code>.
+            </li></ul></div><p>
+    </p><p>
+        <span class="bold"><strong>Other Features</strong></span>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                Hazelcast <code class="code">IList</code> and <code class="code">ISet</code> now have their own configurations. They can be configured
+                using config API, xml and Spring. See <code class="code">ListConfig</code> and <code class="code">SetConfig</code> classes.
+            </li><li class="listitem"><code class="code">HazelcastInstance.shutdown()</code> method added back.
+            </li><li class="listitem">
+                OSGI compatibility is improved significantly.
+            </li></ul></div><p>
+    </p><p>
+        <span class="bold"><strong>Fixed Issues</strong></span>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><a class="link" href="https://github.com/hazelcast/hazelcast/issues?milestone=23&amp;state=closed" target="_top">Version 3.1</a></li></ul></div><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><a class="link" href="https://github.com/hazelcast/hazelcast/issues?milestone=30&amp;state=closed" target="_top">Version 3.1.1</a></li></ul></div><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><a class="link" href="https://github.com/hazelcast/hazelcast/issues?milestone=33&amp;state=closed" target="_top">Version 3.1.2</a></li></ul></div><p>
+    </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="index.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch01s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">In-Memory Data Grid - Hazelcast | Documentation&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;1.2.&nbsp;What's new in 3.0?</td></tr></table></div></body></html>

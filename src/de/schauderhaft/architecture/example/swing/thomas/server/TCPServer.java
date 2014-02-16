@@ -16,12 +16,21 @@ import de.schauderhaft.architecture.example.CrosswordGame;
 
 public class TCPServer {
 
-    private Map<String, CrosswordGame> hostname2game = new HashMap<String, CrosswordGame>();
     private Set<String> words;
+    // private ConcurrentMap<String, CrosswordGame> hostname2gameMultiMap;
+    private Map<String, CrosswordGame> hostname2game;
 
     public TCPServer(final Set<String> words) {
 	this.words = words;
+	initMultiMap();
+    }
 
+    private void initMultiMap() {
+	// Config config = new Config();
+	// HazelcastInstance h = Hazelcast.newHazelcastInstance(config);
+	// this.hostname2gameMultiMap =
+	// h.getMap("hostname-to-crosswordgame-map");
+	this.hostname2game = new HashMap<String, CrosswordGame>();
     }
 
     public void startServer(int port) throws IOException {

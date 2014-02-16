@@ -1,0 +1,49 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;17.&nbsp;Clients</title><link rel="stylesheet" type="text/css" href="./docbook.css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"><meta name="keywords" content="hazelcast, distributed, cache, distributed cache, cluster, data grid, in-memory data grid"><link rel="home" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="up" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="prev" href="ch16s06.html" title="16.6.&nbsp;Spring Data - MongoDB"><link rel="next" href="ch17s02.html" title="17.2.&nbsp;Memcache Client"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;17.&nbsp;Clients</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch16s06.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch17s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;17.&nbsp;Clients"><div class="titlepage"><div><div><h2 class="title"><a name="Clients"></a>Chapter&nbsp;17.&nbsp;Clients</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch17.html#NativeClient">17.1. Native Client</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch17.html#JavaClient">17.1.1. Java Client</a></span></dt><dt><span class="sect2"><a href="ch17.html#CSharpClient">17.1.2. CSharp Client <sup>(Enterprise Edition Only)</sup></a></span></dt></dl></dd><dt><span class="sect1"><a href="ch17s02.html">17.2. Memcache Client</a></span></dt><dt><span class="sect1"><a href="ch17s03.html">17.3. Rest Client</a></span></dt></dl></div><p>
+
+    There are currently three ways to connect to a running Hazelcast cluster:
+    </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+                <a class="link" href="ch17.html#NativeClient" title="17.1.&nbsp;Native Client">Native Clients</a>
+            </p></li><li class="listitem"><p>
+                <a class="link" href="ch17s02.html" title="17.2.&nbsp;Memcache Client">Memcache Clients</a>
+            </p></li><li class="listitem"><p>
+                <a class="link" href="ch17s03.html" title="17.3.&nbsp;Rest Client">REST Client</a>
+            </p></li></ol></div><p>
+</p><div class="sect1" title="17.1.&nbsp;Native Client"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="NativeClient"></a>17.1.&nbsp;Native Client</h2></div></div></div><p>Native Client enables you to do almost all Hazelcast operations without being a member of the
+        cluster. It connects to one of the cluster members and delegates all cluster wide operations
+        to it or connects to all of them and delegate operations smartly. When the relied cluster member dies, client will transparently switch to another live
+        member.
+    </p><p>There can be hundreds, even thousands of clients connected to the cluster. But by default there is 40 threads
+    on server side that will handle all the requests. You may want to increase hazelcast.executor.client.thread.count
+    property for better performance. </p><p>Imagine a trading application where all the trading data stored and managed in a 10 node
+        Hazelcast cluster. Swing/Web applications at traders' desktops can use Native Java Client to
+        access and modify the data in the Hazelcast cluster.
+    </p><p>Currently Hazelcast has Native Java and C# Client available.
+        C# Client implementation has not yet finished as of version 3.
+    </p><div class="sect2" title="17.1.1.&nbsp;Java Client"><div class="titlepage"><div><div><h3 class="title"><a name="JavaClient"></a>17.1.1.&nbsp;Java Client</h3></div></div></div><p>You can do almost all hazelcast operations with Java Client. It already implements the
+            same interface. You must include hazelcast-client.jar into your classpath.
+            </p><pre class="programlisting"><strong class="hl-keyword">import</strong> com.hazelcast.core.HazelcastInstance;
+<strong class="hl-keyword">import</strong> com.hazelcast.client.HazelcastClient;
+
+<strong class="hl-keyword">import</strong> java.util.Map;
+<strong class="hl-keyword">import</strong> java.util.Collection;
+
+
+ClientConfig clientConfig = <strong class="hl-keyword">new</strong> ClientConfig();
+clientConfig.getGroupConfig().setName(<font font-style="normal" color="#008000">"dev"</font>).setPassword(<font font-style="normal" color="#008000">"dev-pass"</font>);
+clientConfig.addAddress(<font font-style="normal" color="#008000">"10.90.0.1"</font>, <font font-style="normal" color="#008000">"10.90.0.2:5702"</font>);
+
+HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
+<em class="hl-comment" style="color: silver">//All cluster operations that you can do with ordinary HazelcastInstance</em>
+Map&lt;String, Customer&gt; mapCustomers = client.getMap(<font font-style="normal" color="#008000">"customers"</font>);
+mapCustomers.put(<font font-style="normal" color="#008000">"1"</font>, <strong class="hl-keyword">new</strong> Customer(<font font-style="normal" color="#008000">"Joe"</font>, <font font-style="normal" color="#008000">"Smith"</font>));
+mapCustomers.put(<font font-style="normal" color="#008000">"2"</font>, <strong class="hl-keyword">new</strong> Customer(<font font-style="normal" color="#008000">"Ali"</font>, <font font-style="normal" color="#008000">"Selam"</font>));
+mapCustomers.put(<font font-style="normal" color="#008000">"3"</font>, <strong class="hl-keyword">new</strong> Customer(<font font-style="normal" color="#008000">"Avi"</font>, <font font-style="normal" color="#008000">"Noyan"</font>));
+
+Collection&lt;Customer&gt; colCustomers = mapCustomers.values();
+<strong class="hl-keyword">for</strong> (Customer customer : colCustomers) {
+     <em class="hl-comment" style="color: silver">// process customer</em>
+}
+</pre><p>
+        </p></div><div class="sect2" title="17.1.2.&nbsp;CSharp Client (Enterprise Edition Only)"><div class="titlepage"><div><div><h3 class="title"><a name="CSharpClient"></a>17.1.2.&nbsp;CSharp Client <sup>(Enterprise Edition Only)</sup></h3></div></div></div><p>Not yet implemented as of version 3</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch16s06.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch17s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">16.6.&nbsp;Spring Data - MongoDB&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;17.2.&nbsp;Memcache Client</td></tr></table></div></body></html>
