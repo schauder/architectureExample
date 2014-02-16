@@ -7,16 +7,21 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import de.schauderhaft.architecture.example.CrosswordGame;
 
 public class TCPServer {
 
-    private CrosswordGame game;
+    private Map<String, CrosswordGame> hostname2game = new HashMap<String, CrosswordGame>();
+    private Set<String> words;
 
-    public TCPServer(CrosswordGame game) {
-	this.game = game;
+    public TCPServer(final Set<String> words) {
+	this.words = words;
+
     }
 
     public void startServer(int port) throws IOException {
@@ -29,16 +34,30 @@ public class TCPServer {
 	    clientSentence = inFromClient.readLine();
 	    System.out.println("Received: " + clientSentence);
 
+	    // fehlende Validierung auf 2 Inhalte!
 	    String[] split = clientSentence
 		    .split(ServerConst.MESSAGE_SEPARATOR);
 
-	    int answer = game.submit(split[1]);
+	    String hostname = split[0];
+	    CrosswordGame game = getOrCreateCrossworGame(hostname);
+
+	    String word = split[1];
+	    int answer = game.submit(word);
 
 	    responseAnswer(connectionSocket, answer);
 
 	    inFromClient.close();
 	    connectionSocket.close();
 	}
+    }
+
+    private CrosswordGame getOrCreateCrossworGame(String hostname) {
+	// fehlende Validierung des Hostnamens
+	if (!hostname2game.containsKey(hostname)) {
+	    hostname2game.put(hostname, new CrosswordGame(words));
+	}
+	return hostname2game.get(hostname);
+
     }
 
     private void responseAnswer(Socket connectionSocket, int answer)
@@ -50,13 +69,13 @@ public class TCPServer {
     }
 
     public static void main(String argv[]) throws Exception {
-	CrosswordGame game = new CrosswordGame(new HashSet<String>(
-		Arrays.asList("Haus", "Maus", "Auto")));
+	HashSet<String> knownWords = new HashSet<String>(Arrays.asList("Haus",
+		"Maus", "Auto"));
 	int port = 6789;
 	if (argv.length > 0) {
 	    port = Integer.valueOf(argv[0]);
 	}
-	TCPServer server = new TCPServer(game);
+	TCPServer server = new TCPServer(knownWords);
 	server.startServer(port);
     }
 }
