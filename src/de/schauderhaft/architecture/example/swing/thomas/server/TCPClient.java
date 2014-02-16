@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class TCPClient {
 
@@ -18,7 +20,7 @@ public class TCPClient {
 	    socketToServer = new DataOutputStream(
 		    clientSocket.getOutputStream());
 
-	    socketToServer.writeBytes(word + '\n');
+	    socketToServer.writeBytes(createMessage(word) + '\n');
 
 	    responseFromServer = new BufferedReader(new InputStreamReader(
 		    clientSocket.getInputStream()));
@@ -32,6 +34,20 @@ public class TCPClient {
 	    // close should be in finally block
 	    closeStream(clientSocket, socketToServer, responseFromServer);
 	}
+    }
+
+    private String createMessage(String word) {
+	StringBuilder message = new StringBuilder();
+	try {
+	    message.append(InetAddress.getLocalHost().getHostName());
+	} catch (UnknownHostException e) {
+	    throw new RuntimeException("Zugriff auf eigene IP fehlgeschlagen!"
+		    + e);
+	}
+	message.append(ServerConst.MESSAGE_SEPARATOR);
+	message.append(word);
+	return message.toString();
+
     }
 
     private void closeStream(Socket clientSocket, DataOutputStream socketOut,

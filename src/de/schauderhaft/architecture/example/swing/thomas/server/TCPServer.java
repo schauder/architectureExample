@@ -29,7 +29,10 @@ public class TCPServer {
 	    clientSentence = inFromClient.readLine();
 	    System.out.println("Received: " + clientSentence);
 
-	    int answer = game.submit(clientSentence);
+	    String[] split = clientSentence
+		    .split(ServerConst.MESSAGE_SEPARATOR);
+
+	    int answer = game.submit(split[1]);
 
 	    responseAnswer(connectionSocket, answer);
 
