@@ -17,8 +17,8 @@ public class ConsoleStuff {
 		HashSet<String> knownWords = new HashSet<String>();
 		fillDictionary(knownWords);
 
-		System.out.println("Spiel gestartet!");
-		System.out.println("Es sind " + knownWords.size() + " Wörter im Wörterbuch.\n");
+		System.out.println("Game started!");
+		System.out.println("There are " + knownWords.size() + " words in the dictionary.\n");
 		game = new CrosswordGame(knownWords);
 
 		int runde = 1;
@@ -26,11 +26,11 @@ public class ConsoleStuff {
 
 		while (true) {
 
-			System.out.print("Runde " + runde++ + " Eingabe: ");
+			System.out.print("Round " + runde++ + " Input: ");
 			String input = makeInput();
 
 			int pointsTotal = game.submit(input);
-			System.out.println("\"" + input + "\" bringt " + (pointsTotal - pointsTotalLastRound) + " Punkte! Gesamt: " + pointsTotal);
+			System.out.println("\"" + input + "\" gives " + (pointsTotal - pointsTotalLastRound) + " points! Sum: " + pointsTotal);
 			pointsTotalLastRound = pointsTotal;
 		}
 	}
