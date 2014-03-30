@@ -1,4 +1,5 @@
 package de.schauderhaft.architecture.example.steven.client.jettyWebSocket;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,7 +42,7 @@ public class Client {
 		@OnWebSocketConnect
 		public void onConnect(Session session) {
 			try {
-				System.out.println("Sending initial message");
+				System.out.println("Sending initial message \"Hello Server\"");
 				session.getRemote().sendString("Hello Server!");
 			} catch (IOException e) {
 				e.printStackTrace();
