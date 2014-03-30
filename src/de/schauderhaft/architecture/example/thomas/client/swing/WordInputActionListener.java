@@ -1,4 +1,4 @@
-package de.schauderhaft.architecture.example.swing.thomas;
+package de.schauderhaft.architecture.example.thomas.client.swing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
