@@ -1,4 +1,4 @@
-package de.schauderhaft.architecture.example.console.steven;
+package de.schauderhaft.architecture.example.steven.client.console;
 
 import java.io.BufferedReader;
 import java.io.File;

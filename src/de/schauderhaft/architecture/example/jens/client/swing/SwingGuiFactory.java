@@ -1,4 +1,4 @@
-package de.schauderhaft.architecture.example.swing.jens;
+package de.schauderhaft.architecture.example.jens.client.swing;
 
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
