@@ -1,4 +1,5 @@
 package de.schauderhaft.architecture.example.steven.server.jettyWebSocket;
+
 import java.io.IOException;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -26,7 +27,7 @@ public class MyWebSocketHandler {
 		System.out.println("New connection from " + session.getRemoteAddress().getAddress() + ":" + session.getRemoteAddress().getPort()
 				+ ", sending welcome message");
 		try {
-			session.getRemote().sendString("Welcome!");
+			session.getRemote().sendString("Welcome, client!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -34,6 +35,6 @@ public class MyWebSocketHandler {
 
 	@OnWebSocketMessage
 	public void onMessage(String message) {
-		System.out.println("Sending message: " + message);
+		System.out.println("Receiving message: " + message);
 	}
 }
