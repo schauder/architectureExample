@@ -55,19 +55,16 @@ public class Client {
 
 		@OnWebSocketConnect
 		public void onConnect(Session session) {
-			try {
-				System.out.println("Ready to send words to server");
-
-				doGameLoop(session);
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			System.out.println("Connection established. Ready to send words to server");
 		}
 
 		@OnWebSocketMessage
-		public void onMessage(String message) {
-			System.out.println("Receiving message: " + message);
+		public void onMessage(Session session, String message) throws IOException {
+
+			System.out.println(message);
+
+			String input = makeInput();
+			session.getRemote().sendString(input);
 		}
 
 		@OnWebSocketClose
@@ -80,11 +77,4 @@ public class Client {
 		}
 	}
 
-	private void doGameLoop(Session session) throws IOException {
-		while (true) {
-			String input = makeInput();
-			System.out.println("Sending \"" + input + "\"");
-			session.getRemote().sendString(input);
-		}
-	}
 }
