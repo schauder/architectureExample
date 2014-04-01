@@ -13,13 +13,14 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 public class MyWebSocketHandler {
 
 	@OnWebSocketClose
-	public void onClose(int statusCode, String reason) {
-		System.out.println("Close: statusCode=" + statusCode + ", reason=" + reason);
+	public void onClose(Session session, int statusCode, String reason) {
+		System.out.println("Closed connection from " + session.getRemoteAddress().getAddress() + ":" + session.getRemoteAddress().getPort()
+				+ " because of code " + statusCode + " (" + reason + ")");
 	}
 
 	@OnWebSocketError
-	public void onError(Throwable t) {
-		System.out.println("Error: " + t.getMessage());
+	public void onError(Session session, Throwable t) {
+		System.out.println("Error with client " + session.getRemoteAddress().getAddress() + ": " + t.getMessage());
 	}
 
 	@OnWebSocketConnect
@@ -27,14 +28,14 @@ public class MyWebSocketHandler {
 		System.out.println("New connection from " + session.getRemoteAddress().getAddress() + ":" + session.getRemoteAddress().getPort()
 				+ ", sending welcome message");
 		try {
-			session.getRemote().sendString("Welcome, client!");
+			session.getRemote().sendString("Welcome, client! I started a new game for you and am ready to receive your words.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@OnWebSocketMessage
-	public void onMessage(String message) {
-		System.out.println("Receiving message: " + message);
+	public void onMessage(Session session, String message) {
+		System.out.println("Message from " + session.getRemoteAddress().getAddress() + ":" + session.getRemoteAddress().getPort() + ": " + message);
 	}
 }

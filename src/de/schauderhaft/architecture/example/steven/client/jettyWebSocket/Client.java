@@ -1,6 +1,8 @@
 package de.schauderhaft.architecture.example.steven.client.jettyWebSocket;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
@@ -29,10 +31,22 @@ public class Client {
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
 			System.out.println("Connecting to " + destinationUri);
 			client.connect(socket, destinationUri, request);
+
 			socket.awaitClose(5, TimeUnit.SECONDS);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
+	}
+
+	private static String makeInput() {
+		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+		String zeile = null;
+		try {
+			zeile = console.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return zeile;
 	}
 
 	@WebSocket
@@ -42,8 +56,11 @@ public class Client {
 		@OnWebSocketConnect
 		public void onConnect(Session session) {
 			try {
-				System.out.println("Sending initial message \"Hello Server\"");
-				session.getRemote().sendString("Hello Server!");
+				System.out.println("Sending initial message");
+				session.getRemote().sendString("Hello Server, wanna play?");
+
+				doGameLoop(session);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -61,6 +78,14 @@ public class Client {
 
 		public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
 			return this.closeLatch.await(duration, unit);
+		}
+	}
+
+	private void doGameLoop(Session session) throws IOException {
+		while (true) {
+			String input = makeInput();
+			System.out.println("Sending \"" + input + "\"");
+			session.getRemote().sendString(input);
 		}
 	}
 }
