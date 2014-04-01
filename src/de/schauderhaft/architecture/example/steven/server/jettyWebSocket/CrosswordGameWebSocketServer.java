@@ -17,6 +17,10 @@ public class CrosswordGameWebSocketServer {
 
 	HashSet<String> knownWords;
 
+	public static void main(String[] args) throws Exception {
+		new CrosswordGameWebSocketServer();
+	}
+
 	public CrosswordGameWebSocketServer() {
 
 		System.out.println("Filling dictionary");
@@ -35,10 +39,6 @@ public class CrosswordGameWebSocketServer {
 			System.out.println("Exception starting web server: " + e.getMessage());
 			e.printStackTrace();
 		}
-	}
-
-	public static void main(String[] args) throws Exception {
-		new CrosswordGameWebSocketServer();
 	}
 
 	private void fillDictionary(HashSet<String> knownWords) throws IOException {
