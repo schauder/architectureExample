@@ -56,8 +56,7 @@ public class Client {
 		@OnWebSocketConnect
 		public void onConnect(Session session) {
 			try {
-				System.out.println("Sending initial message");
-				session.getRemote().sendString("Hello Server, wanna play?");
+				System.out.println("Ready to send words to server");
 
 				doGameLoop(session);
 

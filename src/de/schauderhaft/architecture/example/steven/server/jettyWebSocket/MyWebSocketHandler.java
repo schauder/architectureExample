@@ -1,6 +1,7 @@
 package de.schauderhaft.architecture.example.steven.server.jettyWebSocket;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,7 +18,11 @@ import de.schauderhaft.architecture.example.CrosswordGame;
 public class MyWebSocketHandler {
 
 	Set<String> knownWords;
-	private Map<String, CrosswordGame> games;
+	private Map<String, CrosswordGame> games = new HashMap<String, CrosswordGame>();
+
+	// TODO I would like to store the points total within the object
+	// CrosswordGame. Can we please do that so I can remove this ugly map?
+	private Map<String, Integer> pointsTotalLastRoundMap = new HashMap<String, Integer>();
 
 	public MyWebSocketHandler() {
 
@@ -36,7 +41,9 @@ public class MyWebSocketHandler {
 		String clientIdentifier = extractClientIdentifier(session);
 		System.out.println("New connection from " + clientIdentifier + ", sending welcome message");
 		try {
-			// games.put(clientIdentifier, new CrosswordGame(knownWords));
+			games.put(clientIdentifier, new CrosswordGame(knownWords));
+			pointsTotalLastRoundMap.put(clientIdentifier, 0);
+
 			session.getRemote().sendString("Welcome, client! I started a new game for you and am ready to receive your words.");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -44,8 +51,27 @@ public class MyWebSocketHandler {
 	}
 
 	@OnWebSocketMessage
-	public void onMessage(Session session, String message) {
-		System.out.println("Message from " + session.getRemoteAddress().getAddress() + ":" + session.getRemoteAddress().getPort() + ": " + message);
+	public void onMessage(Session session, String message) throws IOException {
+		String clientIdentifier = extractClientIdentifier(session);
+
+		System.out.println("From " + clientIdentifier + ": " + message);
+
+		CrosswordGame game = games.get(clientIdentifier);
+		Integer pointsTotalLastRound = pointsTotalLastRoundMap.get(clientIdentifier);
+
+		if (game == null) {
+			// TODO tell the client that somewthing went wrong and start a new
+			// game for him
+		}
+
+		int pointsTotal = game.submit(message);
+		String reply = "\"" + message + "\" gives " + (pointsTotal - pointsTotalLastRound) + " points! Sum: " + pointsTotal;
+		System.out.println("To " + clientIdentifier + ": " + reply);
+		session.getRemote().sendString(reply);
+
+		pointsTotalLastRound = pointsTotal;
+		pointsTotalLastRoundMap.put(clientIdentifier, pointsTotalLastRound);
+
 	}
 
 	@OnWebSocketClose
