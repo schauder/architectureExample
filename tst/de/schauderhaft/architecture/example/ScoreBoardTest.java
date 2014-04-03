@@ -7,21 +7,21 @@ import java.awt.Component;
 
 import org.junit.Test;
 
-import de.schauderhaft.architecture.example.swing.thomas.ScoreBoard;
+import de.schauderhaft.architecture.example.thomas.client.swing.ScoreBoard;
 
 public class ScoreBoardTest {
 
-	ScoreBoard underTest = new ScoreBoard();
+    ScoreBoard underTest = new ScoreBoard();
 
-	@Test
-	public void panelIsNotNull() {
-		assertNotNull(underTest.getScorePanel());
-	}
+    @Test
+    public void panelIsNotNull() {
+        assertNotNull(underTest.getScorePanel());
+    }
 
-	@Test
-	public void scoreBoardShouldHaveTwoComponents() throws Exception {
+    @Test
+    public void scoreBoardShouldHaveTwoComponents() throws Exception {
 
-		Component[] components = underTest.getScorePanel().getComponents();
-		assertEquals(2, components.length);
-	}
+        Component[] components = underTest.getScorePanel().getComponents();
+        assertEquals(2, components.length);
+    }
 }
