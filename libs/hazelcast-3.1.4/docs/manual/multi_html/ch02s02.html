@@ -1,0 +1,116 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>2.2.&nbsp;Distributed Queue</title><link rel="stylesheet" type="text/css" href="./docbook.css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"><meta name="keywords" content="hazelcast, distributed, cache, distributed cache, cluster, data grid, in-memory data grid"><link rel="home" href="index.html" title="In-Memory Data Grid - Hazelcast | Documentation"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Distributed Data Structures"><link rel="prev" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Distributed Data Structures"><link rel="next" href="ch02s03.html" title="2.3.&nbsp;Distributed MultiMap"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">2.2.&nbsp;Distributed Queue</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch02.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;2.&nbsp;Distributed Data Structures</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch02s03.html">Next</a></td></tr></table><hr></div><div class="sect1" title="2.2.&nbsp;Distributed Queue"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="Queue"></a>2.2.&nbsp;Distributed Queue</h2></div></div></div><p>Hazelcast distributed queue is an implementation
+        of<code class="literal">java.util.concurrent.BlockingQueue</code>.
+        </p><pre class="programlisting"><strong class="hl-keyword">import</strong> com.hazelcast.core.Hazelcast;
+<strong class="hl-keyword">import</strong> java.util.concurrent.BlockingQueue;
+<strong class="hl-keyword">import</strong> java.util.concurrent.TimeUnit;
+<strong class="hl-keyword">import</strong> com.hazelcast.config.Config;
+
+Config cfg = <strong class="hl-keyword">new</strong> Config();
+HazelcastInstance hz = Hazelcast.newHazelcastInstance(cfg);
+BlockingQueue&lt;MyTask&gt; q = hz.getQueue(<font font-style="normal" color="#008000">"tasks"</font>);
+q.put(<strong class="hl-keyword">new</strong> MyTask());
+MyTask task = q.take();
+
+<strong class="hl-keyword">boolean</strong> offered = q.offer(<strong class="hl-keyword">new</strong> MyTask(), <span class="hl-number">10</span>, TimeUnit.SECONDS);
+task = q.poll (<span class="hl-number">5</span>, TimeUnit.SECONDS);
+<strong class="hl-keyword">if</strong> (task != null) {
+    <em class="hl-comment" style="color: silver">//process task</em>
+}
+</pre><p>
+        FIFO ordering will apply to all queue operations cluster-wide. User objects (such
+        as
+        <code class="literal">MyTask</code>
+        in the example above), that are (en/de)queued have to
+        be <code class="literal">Serializable</code>.
+        By configuring max-size for queue one can obtain a bounded queue.
+
+    </p><p>
+        Sample configuration:
+        </p><pre class="programlisting"><font font-style="bold" color="#0A1777">&lt;hazelcast&gt;</font>
+    ...
+    <font font-style="bold" color="#0A1777">&lt;queue</font> <font font-style="bold" color="#0A1777">name</font>=<font font-style="bold" color="#008000">"tasks"</font><font font-style="bold" color="#0A1777">&gt;</font>
+        <em class="hl-comment" style="color: silver">&lt;!--
+            Maximum size of the queue. When queue size reaches the maximum,
+            all put operations will get blocked until the queue size
+            goes down below the maximum.
+            Any integer between 0 and Integer.MAX_VALUE. 0 means Integer.MAX_VALUE. Default is 0.
+        --&gt;</em>
+        <font font-style="bold" color="#0A1777">&lt;max-size&gt;</font>10000<font font-style="bold" color="#0A1777">&lt;/max-size&gt;</font>
+
+        <em class="hl-comment" style="color: silver">&lt;!--
+        Number of backups. If 1 is set as the backup-count for example,
+        then all entries of the map will be copied to another JVM for
+        fail-safety. Valid numbers are 0 (no backup), 1, 2 ... 6.
+        Default is 1.
+        --&gt;</em>
+        <font font-style="bold" color="#0A1777">&lt;backup-count&gt;</font>1<font font-style="bold" color="#0A1777">&lt;/backup-count&gt;</font>
+
+        <em class="hl-comment" style="color: silver">&lt;!--
+            Number of async backups. 0 means no backup.
+        --&gt;</em>
+        <font font-style="bold" color="#0A1777">&lt;async-backup-count&gt;</font>0<font font-style="bold" color="#0A1777">&lt;/async-backup-count&gt;</font>
+
+        <em class="hl-comment" style="color: silver">&lt;!--
+            QueueStore implementation to persist items.
+            'binary' property indicates that storing items will be in binary format
+            'memory-limit' property enables 'overflow to store' after reaching limit
+            'bulk-load' property enables bulk-loading from store
+        --&gt;</em>
+        <font font-style="bold" color="#0A1777">&lt;queue-store&gt;</font>
+            <font font-style="bold" color="#0A1777">&lt;class-name&gt;</font>com.hazelcast.QueueStore<font font-style="bold" color="#0A1777">&lt;/class-name&gt;</font>
+            <font font-style="bold" color="#0A1777">&lt;properties&gt;</font>
+                <font font-style="bold" color="#0A1777">&lt;property</font> <font font-style="bold" color="#0A1777">name</font>=<font font-style="bold" color="#008000">"binary"</font><font font-style="bold" color="#0A1777">&gt;</font>false<font font-style="bold" color="#0A1777">&lt;/property&gt;</font>
+                <font font-style="bold" color="#0A1777">&lt;property</font> <font font-style="bold" color="#0A1777">name</font>=<font font-style="bold" color="#008000">"memory-limit"</font><font font-style="bold" color="#0A1777">&gt;</font>1000<font font-style="bold" color="#0A1777">&lt;/property&gt;</font>
+                <font font-style="bold" color="#0A1777">&lt;property</font> <font font-style="bold" color="#0A1777">name</font>=<font font-style="bold" color="#008000">"bulk-load"</font><font font-style="bold" color="#0A1777">&gt;</font>250<font font-style="bold" color="#0A1777">&lt;/property&gt;</font>
+            <font font-style="bold" color="#0A1777">&lt;/properties&gt;</font>
+        <font font-style="bold" color="#0A1777">&lt;/queue-store&gt;</font>
+    <font font-style="bold" color="#0A1777">&lt;/queue&gt;</font>
+<font font-style="bold" color="#0A1777">&lt;/hazelcast&gt;</font>
+</pre><p>
+    </p><div class="sect2" title="2.2.1.&nbsp;Persistence"><div class="titlepage"><div><div><h3 class="title"><a name="QueuePersistence"></a>2.2.1.&nbsp;Persistence</h3></div></div></div><p>Hazelcast allows you to load and store the distributed queue entries from/to a
+            persistent datastore such as relational database via a queue-store.
+            If queue store is enabled then each entry added to queue will also be stored to configured queue store.
+            When the number of items in queue exceed the memory limit, items will only persisted to queue store,
+            they will not stored in queue memory.
+            Here the queue store configuration options:
+            </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="bold"><strong>Binary:</strong></span>
+                    By default Hazelcast stores queue items in serialized form in memory and before inserting into datastore deserializes them.
+                    But if you will not reach the queue store from an external application you can prefer the items to be inserted in binary form.
+                    So you get rid of de-serialization step that is a performance optimization. By default binary feature is not enabled.
+                </li><li class="listitem"><span class="bold"><strong>Memory Limit:</strong></span>
+                    This is the number of items after which Hazelcast will just store items to datastore.
+                    For example if memory limit is 1000, then 1001st item will be just put into datastore.
+                    This feature is useful when you want to avoid out-of-memory conditions. Default number for memory limit is 1000.
+                    If you want to always use memory you can set it to Integer.MAX_VALUE.
+                </li><li class="listitem"><span class="bold"><strong>Bulk Load:</strong></span>
+                    At initialization of queue, items are loaded from QueueStore in bulks. Bulk load is the size these bulks.
+                    By default it is 250.
+                </li></ul></div><p>
+
+            </p><p>
+                Here an example queue store configuration:
+                </p><pre class="programlisting">
+        <font font-style="bold" color="#0A1777">&lt;queue-store&gt;</font>
+            <font font-style="bold" color="#0A1777">&lt;class-name&gt;</font>com.hazelcast.QueueStoreImpl<font font-style="bold" color="#0A1777">&lt;/class-name&gt;</font>
+            <font font-style="bold" color="#0A1777">&lt;properties&gt;</font>
+                <font font-style="bold" color="#0A1777">&lt;property</font> <font font-style="bold" color="#0A1777">name</font>=<font font-style="bold" color="#008000">"binary"</font><font font-style="bold" color="#0A1777">&gt;</font>false<font font-style="bold" color="#0A1777">&lt;/property&gt;</font>
+                <font font-style="bold" color="#0A1777">&lt;property</font> <font font-style="bold" color="#0A1777">name</font>=<font font-style="bold" color="#008000">"memory-limit"</font><font font-style="bold" color="#0A1777">&gt;</font>10000<font font-style="bold" color="#0A1777">&lt;/property&gt;</font>
+                <font font-style="bold" color="#0A1777">&lt;property</font> <font font-style="bold" color="#0A1777">name</font>=<font font-style="bold" color="#008000">"bulk-load"</font><font font-style="bold" color="#0A1777">&gt;</font>500<font font-style="bold" color="#0A1777">&lt;/property&gt;</font>
+            <font font-style="bold" color="#0A1777">&lt;/properties&gt;</font>
+        <font font-style="bold" color="#0A1777">&lt;/queue-store&gt;</font>
+    <font font-style="bold" color="#0A1777">&lt;/queue&gt;</font>
+
+
+<font font-style="bold" color="#0A1777">&lt;/hazelcast&gt;</font>
+</pre><p>
+            </p><p>
+
+        </p></div><p>
+    <span class="bold"><strong>To learn about wildcard configuration feature, see
+        <a class="link" href="ch14s05.html" title="14.5.&nbsp;Wildcard Configuration">Wildcard Configuration
+        </a>
+        page.
+    </strong></span>
+</p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch02.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ch02.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch02s03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;2.&nbsp;Distributed Data Structures&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;2.3.&nbsp;Distributed MultiMap</td></tr></table></div></body></html>
