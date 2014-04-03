@@ -25,6 +25,25 @@ public class SwingGuiFactory implements GuiFactory {
 	main.setVisible(true);
     }
 
+<<<<<<< HEAD
+    private void addComponents(Container contentPane, final CrosswordGame game) {
+        final JTextField textbox = new JTextField(20);
+        JButton submit = new JButton("Submit");
+        final ScoreBoardBuilder scoreBoardBuilder = new ScoreBoardBuilder();
+
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent action) {
+                scoreBoardBuilder.getApi().setValue(
+                        game.submit(textbox.getText()));
+            }
+        });
+
+        contentPane.setLayout(new FlowLayout());
+        contentPane.add(textbox);
+        contentPane.add(submit);
+        contentPane.add(scoreBoardBuilder.getComponent());
+=======
     private void addComponents(Container contentPane, final TCPClient client) {
 	final JTextField textbox = new JTextField(20);
 	JButton submit = new JButton("Submit");
@@ -38,9 +57,10 @@ public class SwingGuiFactory implements GuiFactory {
 	    }
 	});
 
+	contentPane.add(textbox);
 	contentPane.setLayout(new FlowLayout());
-        contentPane.add(textbox);
 	contentPane.add(submit);
 	contentPane.add(scoreBoardBuilder.getComponent());
+>>>>>>> ce29262ba5bcd062bf694ce160dbed1b3d3f7c78
     }
 }

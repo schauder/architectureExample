@@ -8,7 +8,7 @@ import java.util.Set;
 import org.junit.Test;
 
 public class CrosswordGameTest {
-    private final Set<String> knownWords = new HashSet<>();
+    private final Set<String> knownWords = new HashSet<String>();
     {
         knownWords.add("word");
         knownWords.add("crossword");
