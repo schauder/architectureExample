@@ -18,6 +18,9 @@ import de.schauderhaft.architecture.example.CrosswordGame;
 public class MyWebSocketHandler {
 
 	Set<String> knownWords;
+
+	// TODO Is this necessary?`This handler handles only one connection which is
+	// only one game.
 	private Map<String, CrosswordGame> games = new HashMap<String, CrosswordGame>();
 
 	// TODO I would like to store the points total within the object
