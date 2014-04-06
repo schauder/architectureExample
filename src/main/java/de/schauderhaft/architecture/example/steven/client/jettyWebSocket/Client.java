@@ -1,6 +1,8 @@
 package de.schauderhaft.architecture.example.steven.client.jettyWebSocket;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
@@ -29,10 +31,22 @@ public class Client {
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
 			System.out.println("Connecting to " + destinationUri);
 			client.connect(socket, destinationUri, request);
+
 			socket.awaitClose(5, TimeUnit.SECONDS);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
+	}
+
+	private static String makeInput() {
+		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+		String zeile = null;
+		try {
+			zeile = console.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return zeile;
 	}
 
 	@WebSocket
@@ -41,17 +55,16 @@ public class Client {
 
 		@OnWebSocketConnect
 		public void onConnect(Session session) {
-			try {
-				System.out.println("Sending initial message \"Hello Server\"");
-				session.getRemote().sendString("Hello Server!");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			System.out.println("Connection established. Ready to send words to server");
 		}
 
 		@OnWebSocketMessage
-		public void onMessage(String message) {
-			System.out.println("Receiving message: " + message);
+		public void onMessage(Session session, String message) throws IOException {
+
+			System.out.println(message);
+
+			String input = makeInput();
+			session.getRemote().sendString(input);
 		}
 
 		@OnWebSocketClose
@@ -63,4 +76,5 @@ public class Client {
 			return this.closeLatch.await(duration, unit);
 		}
 	}
+
 }
