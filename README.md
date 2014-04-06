@@ -7,7 +7,7 @@ As you can see in the package structure, three people are implementing parts of 
 
 
 open tasks
-____________
+-----------
 
 - define an API for the communication between client and server
 - TODO Jens: Please add the tasks from the "homework file" here.
