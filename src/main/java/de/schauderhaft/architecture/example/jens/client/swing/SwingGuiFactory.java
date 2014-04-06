@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-import de.schauderhaft.architecture.example.swing.thomas.server.TCPClient;
+import de.schauderhaft.architecture.example.thomas.server.TCPClient;
 
 public class SwingGuiFactory implements GuiFactory {
 

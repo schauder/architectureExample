@@ -2,7 +2,7 @@ package de.schauderhaft.architecture.example.jens.client.swing;
 
 import javax.swing.SwingUtilities;
 
-import de.schauderhaft.architecture.example.swing.thomas.server.TCPClient;
+import de.schauderhaft.architecture.example.thomas.server.TCPClient;
 
 public class GuiStarter {
 

@@ -1,4 +1,4 @@
-package de.schauderhaft.architecture.example.swing.thomas.server;
+package de.schauderhaft.architecture.example.thomas.server;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
