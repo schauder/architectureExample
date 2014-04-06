@@ -1,6 +1,6 @@
 package de.schauderhaft.architecture.example.jens.client.swing;
 
-import de.schauderhaft.architecture.example.swing.thomas.server.TCPClient;
+import de.schauderhaft.architecture.example.thomas.server.TCPClient;
 
 public interface GuiFactory {
 
