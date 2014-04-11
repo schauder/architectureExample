@@ -9,6 +9,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Get a lot of english word.
+ * 
+ * @author thomicha
+ * 
+ */
 public class Library {
 
 	public static List<String> getAllWords() throws IOException {
