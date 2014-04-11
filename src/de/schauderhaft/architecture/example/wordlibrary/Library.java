@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +18,7 @@ import java.util.Set;
  */
 public class Library {
 
-	public static List<String> getAllWords() throws IOException {
+	public static Collection<String> getAllWords() throws IOException {
 		List<String> knownWords = new ArrayList<>();
 		knownWords.addAll(readFile("ressource/dictionary/altamer.0"));
 		knownWords.addAll(readFile("ressource/dictionary/altamer.1"));

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.schauderhaft.architecture.example.CrosswordGame;
+import de.schauderhaft.architecture.example.wordlibrary.Library;
 
 public class TCPServer {
 
@@ -80,8 +81,8 @@ public class TCPServer {
 	}
 
 	public static void main(String argv[]) throws Exception {
-		HashSet<String> knownWords = new HashSet<String>(Arrays.asList("Haus",
-				"Maus", "Auto"));
+		Set<String> knownWords = new HashSet<>();
+		knownWords.addAll(Library.getAllWords());
 
 		int port = 10000;
 		if (argv.length > 0) {
