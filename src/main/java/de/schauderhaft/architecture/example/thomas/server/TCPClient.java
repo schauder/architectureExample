@@ -6,9 +6,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class TCPClient {
+import de.schauderhaft.architecture.example.common.CommonClient;
 
-	public int request(String word) {
+public class TCPClient implements CommonClient {
+
+	@Override
+	public int sendToServer(String word) {
+		return request(word);
+	}
+
+	private int request(String word) {
 
 		Socket clientSocket = null;
 		DataOutputStream socketToServer = null;
@@ -91,4 +98,5 @@ public class TCPClient {
 			e.printStackTrace();
 		}
 	}
+
 }
