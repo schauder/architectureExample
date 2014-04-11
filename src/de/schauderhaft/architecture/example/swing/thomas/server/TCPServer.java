@@ -82,6 +82,7 @@ public class TCPServer {
 	public static void main(String argv[]) throws Exception {
 		HashSet<String> knownWords = new HashSet<String>(Arrays.asList("Haus",
 				"Maus", "Auto"));
+
 		int port = 10000;
 		if (argv.length > 0) {
 			port = Integer.valueOf(argv[0]);
