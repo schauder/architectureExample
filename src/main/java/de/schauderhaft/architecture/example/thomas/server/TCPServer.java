@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,6 +25,8 @@ public class TCPServer {
 	public TCPServer(final Set<String> words) {
 		this.words = words;
 		initMultiMap();
+
+		DatagramSocket s;
 	}
 
 	private void initMultiMap() {
@@ -37,6 +40,7 @@ public class TCPServer {
 	public void startServer(int port) throws IOException {
 		String clientSentence;
 		ServerSocket welcomeSocket = new ServerSocket(port);
+		System.out.println("Server startet...");
 		while (true) {
 			Socket connectionSocket = welcomeSocket.accept();
 			InetAddress ipClient = connectionSocket.getInetAddress();
@@ -78,6 +82,7 @@ public class TCPServer {
 	public static void main(String argv[]) throws Exception {
 		HashSet<String> knownWords = new HashSet<String>();
 		knownWords.addAll(Library.getEnglishDictionary());
+		System.out.println("Words total: " + knownWords.size());
 		int port = 10000;
 		if (argv.length > 0) {
 			port = Integer.valueOf(argv[0]);
