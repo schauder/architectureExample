@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -38,19 +39,16 @@ public class TCPServer {
 		ServerSocket welcomeSocket = new ServerSocket(port);
 		while (true) {
 			Socket connectionSocket = welcomeSocket.accept();
+			InetAddress ipClient = connectionSocket.getInetAddress();
 			BufferedReader inFromClient = new BufferedReader(
 					new InputStreamReader(connectionSocket.getInputStream()));
 			clientSentence = inFromClient.readLine();
 			System.out.println("Received: " + clientSentence);
 
-			// fehlende Validierung auf 2 Inhalte!
-			String[] split = clientSentence
-					.split(ServerConst.MESSAGE_SEPARATOR);
-
-			String hostname = split[0];
+			String hostname = ipClient.getHostAddress();
 			CrosswordGame game = getOrCreateCrossworGame(hostname);
 
-			String word = split[1];
+			String word = clientSentence;
 			int answer = game.submit(word);
 
 			responseAnswer(connectionSocket, answer);
