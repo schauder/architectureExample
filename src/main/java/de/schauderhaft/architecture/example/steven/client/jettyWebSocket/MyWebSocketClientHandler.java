@@ -26,8 +26,13 @@ public class MyWebSocketClientHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
 
-        System.out.println(message);
+        try {
+            int totalPoints = Integer.valueOf(message);
 
+            System.out.println("new Points: " + totalPoints);
+        } catch (NumberFormatException nfe) {
+            System.out.println(message);
+        }
         String input = makeInput();
         session.getRemote().sendString(input);
     }
