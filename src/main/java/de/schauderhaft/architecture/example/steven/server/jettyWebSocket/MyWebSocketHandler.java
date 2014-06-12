@@ -16,7 +16,6 @@ import de.schauderhaft.architecture.example.CrosswordGame;
 
 @WebSocket
 public class MyWebSocketHandler {
-
     Set<String> knownWords;
 
     // TODO Is this necessary?`This handler handles only one connection which is

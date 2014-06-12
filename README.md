@@ -9,11 +9,16 @@ As you can see in the package structure, three people are implementing parts of 
 open tasks
 -----------
 
-1. EINE Client Api
-1. b Das große Dictionary verwenden
 1. c Ein Sleep von 0.1 Sekunden in den Server einbauen
 2. Je eine Implementierung für beide Server
-3. Drei JMeter  Tests. Jeweils: Wann bricht der server zusammen, bzw. wird ein Limit erreicht:
+    Steven implementierung ist skizziert, aber der CommunicationBuffer liefert die Punkte jeweils eine Runde zu spät.
+
+    Implementierung ist zu dokumentieren
+    und aufzuräumen.    
+	
+	Konsole Client neu beleben.
+3. Zwei JMeter  Tests. Jeweils: Wann bricht der server zusammen, bzw. wird ein Limit erreicht:
 a) möglichst schnell Wörter (nur ein Spiel)
 b) viele Spieler mit je 3 Wörtern
 c) Spieler und Wörter hochdrehen
+
