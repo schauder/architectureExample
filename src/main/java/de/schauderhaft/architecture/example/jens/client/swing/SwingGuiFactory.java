@@ -15,6 +15,8 @@ import de.schauderhaft.architecture.example.common.CommonClient;
 
 public class SwingGuiFactory implements GuiFactory {
 
+    private JButton submit;
+
     @Override
     public void create(CommonClient client) {
         JFrame main = new JFrame("Crossword Game");
@@ -22,12 +24,14 @@ public class SwingGuiFactory implements GuiFactory {
         addComponents(contentPane, client);
         main.pack();
         main.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        main.getRootPane().setDefaultButton(submit);
         main.setVisible(true);
     }
 
     private void addComponents(Container contentPane, final CommonClient client) {
         final JTextField textbox = new JTextField(20);
-        JButton submit = new JButton("Submit");
+        submit = new JButton("Submit");
+        submit.setDefaultCapable(true);
         final ScoreBoardBuilder scoreBoardBuilder = new ScoreBoardBuilder();
 
         submit.addActionListener(new ActionListener() {

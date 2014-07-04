@@ -6,7 +6,6 @@ import javax.swing.JLabel;
 public class ScoreBoardBuilder {
 
     private final JLabel textbox = new JLabel("Points:");
-
     public ValueApi getApi() {
         return new ValueApi() {
             @Override
